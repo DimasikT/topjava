@@ -1,0 +1,38 @@
+table {
+    border-collapse: collapse;
+}
+
+th{
+    border: 1px solid gray;
+    background: darkgray;
+}
+
+td {
+    border-bottom: 1px solid gray;
+}
+
+th, td {
+    width: auto;
+    padding: 10px 30px 10px 10px;
+}
+
+.exceeded {
+    color: red;
+}
+
+.normal {
+    color: green;
+}
+
+.half {
+    display: inline-block;
+    width: 49%;
+    vertical-align: top;
+}
+
+input {
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid darkslateblue;
+    border-radius: 4px;
+}

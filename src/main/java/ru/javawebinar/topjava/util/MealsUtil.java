@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -16,21 +18,34 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toList;
 
 public class MealsUtil {
+
+    public static AtomicInteger gen = new AtomicInteger(0);
+    public static Map<Integer, Meal> meals = new ConcurrentHashMap<>();
+    static {
+
+        Meal m1 = new Meal(gen.incrementAndGet(), LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500);
+        meals.put(m1.getId(), m1);
+        Meal m2 = new Meal(gen.incrementAndGet(), LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000);
+        meals.put(m2.getId(), m2);
+        Meal m3 = new Meal(gen.incrementAndGet(), LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500);
+        meals.put(m3.getId(), m3);
+        Meal m4 = new Meal(gen.incrementAndGet(), LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000);
+        meals.put(m4.getId(), m4);
+        Meal m5 = new Meal(gen.incrementAndGet(), LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500);
+        meals.put(m5.getId(), m5);
+        Meal m6 = new Meal(gen.incrementAndGet(), LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510);
+        meals.put(m6.getId(), m6);
+    }
+
+
     public static void main(String[] args) {
-        List<Meal> meals = Arrays.asList(
-                new Meal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500),
-                new Meal(LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000),
-                new Meal(LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500),
-                new Meal(LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000),
-                new Meal(LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500),
-                new Meal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510)
-        );
-        List<MealWithExceed> mealsWithExceeded = getFilteredWithExceeded(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
+
+        List<MealWithExceed> mealsWithExceeded = getFilteredWithExceeded(new ArrayList<>(meals.values()), LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
         mealsWithExceeded.forEach(System.out::println);
 
-        System.out.println(getFilteredWithExceededByCycle(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000));
-        System.out.println(getFilteredWithExceededInOnePass(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000));
-        System.out.println(getFilteredWithExceededInOnePass2(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000));
+        System.out.println(getFilteredWithExceededByCycle(new ArrayList<>(meals.values()), LocalTime.of(7, 0), LocalTime.of(12, 0), 2000));
+        System.out.println(getFilteredWithExceededInOnePass(new ArrayList<>(meals.values()), LocalTime.of(7, 0), LocalTime.of(12, 0), 2000));
+        System.out.println(getFilteredWithExceededInOnePass2(new ArrayList<>(meals.values()), LocalTime.of(7, 0), LocalTime.of(12, 0), 2000));
     }
 
     public static List<MealWithExceed> getFilteredWithExceeded(List<Meal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
@@ -106,6 +121,6 @@ public class MealsUtil {
     }
 
     public static MealWithExceed createWithExceed(Meal meal, boolean exceeded) {
-        return new MealWithExceed(meal.getDateTime(), meal.getDescription(), meal.getCalories(), exceeded);
+        return new MealWithExceed(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), exceeded);
     }
 }
