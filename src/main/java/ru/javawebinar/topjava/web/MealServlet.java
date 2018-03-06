@@ -48,7 +48,7 @@ public class MealServlet extends HttpServlet {
         } else if ("delete".equals(action)) {
             service.delete(Integer.parseInt(request.getParameter("id")));
             request.setAttribute("meals", MealsUtil.getFilteredWithExceeded(service.getAll(), LocalTime.MIN, LocalTime.MAX, 2000));
-            request.getRequestDispatcher("/meals.jsp").forward(request, response);
+            response.sendRedirect("meals");
         } else {
             request.setAttribute("meals", MealsUtil.getFilteredWithExceeded(service.getAll(), LocalTime.MIN, LocalTime.MAX, 2000));
             request.getRequestDispatcher("/meals.jsp").forward(request, response);
