@@ -43,7 +43,7 @@ public class AdminRestController extends AbstractUserController {
 
     @Override
     @DeleteMapping(value = "/{id}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @ResponseStatus(value = HttpStatus.OK)
     public void delete(@PathVariable("id") int id) {
         super.delete(id);
     }
